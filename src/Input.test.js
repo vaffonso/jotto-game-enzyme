@@ -5,6 +5,7 @@ import { mount } from 'enzyme';
 
 import languageContext from './contexts/languageContext';
 import successContext from './contexts/successContext';
+import guessedWordsContext from './contexts/guessedWordsContext';
 
 /**
  * Create React wrapper for Input component testing
@@ -15,10 +16,13 @@ import successContext from './contexts/successContext';
 const setup = ({ secretWord, language, success }) => {
   language = language || 'en';
   success = success || false;
+  secretWord = secretWord || 'party';
   return mount(
     <languageContext.Provider value={language}>
       <successContext.SuccessProvider value={[success, jest.fn()]}>
-        <Input secretWord={secretWord} />
+        <guessedWordsContext.GuessedWordsProvider>
+          <Input secretWord={secretWord} />
+        </guessedWordsContext.GuessedWordsProvider>
       </successContext.SuccessProvider>
     </languageContext.Provider>
   );
@@ -44,10 +48,11 @@ describe('Input test', () => {
 
 describe('state controller input field', () => {
   let wrapper;
-  const setState = jest.fn();
-  const useStateMock = (initState) => [initState, setState];
+  let setState;
 
   beforeEach(() => {
+    setState = jest.fn();
+    const useStateMock = (initState) => [initState, setState];
     jest.spyOn(React, 'useState').mockImplementation(useStateMock);
     wrapper = setup({});
   });
@@ -68,9 +73,8 @@ describe('state controller input field', () => {
 
   it('should clear input field after submit click', () => {
     const submit = findByTestAttr(wrapper, 'submit-button');
-    submit.simulate('click', { preventDefault: () => {} });
+    submit.simulate('click', { preventDefault: () => { } });
 
-    expect(setState).toHaveBeenCalledTimes(1);
     expect(setState).toHaveBeenCalledWith('');
   });
 });

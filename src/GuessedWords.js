@@ -28,8 +28,8 @@ const GuessedWords = () => {
         <tbody>
           {guessedWords.map((t, i) => (
             <tr data-test="guessed-word" key={i}>
-              <td>t.guessedWord</td>
-              <td>t.letterMatchCount</td>
+              <td>{t.guessedWord}</td>
+              <td>{t.letterMatchCount}</td>
             </tr>
           ))}
         </tbody>

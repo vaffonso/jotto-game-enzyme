@@ -1,19 +1,34 @@
 import React, { useState, useContext } from 'react';
 import languageContext from './contexts/languageContext';
 import successContext from './contexts/successContext';
+import guessedWordsContext from './contexts/guessedWordsContext';
 
 import stringModule from './helpers/strings';
+import { getLetterMatchCount } from './helpers/index';
 
 const initialValue = '';
 
-const Input = () => {
-  const [guessedWord, setGuessedWord] = useState(initialValue);
+const Input = ({ secretWord }) => {
+  const [currentGuess, setCurrentGuess] = useState(initialValue);
+  const [guessedWords, setGuessedWords] = guessedWordsContext.useGuessedWords();
   const [success, setSuccess] = successContext.useSuccess();
   const language = useContext(languageContext);
 
   const submitHandler = (ev) => {
     ev.preventDefault();
-    setGuessedWord(initialValue);
+
+    const letterMatchCount = getLetterMatchCount(currentGuess, secretWord);
+
+    const newGuessedWords = [
+      ...guessedWords,
+      { guessedWord: currentGuess, letterMatchCount: letterMatchCount },
+    ];
+
+    setGuessedWords(newGuessedWords);
+    if (secretWord && secretWord.toLowerCase() === currentGuess.toLowerCase()) {
+      setSuccess(true);
+    }
+    setCurrentGuess(initialValue);
   };
 
   if (success) {
@@ -31,8 +46,8 @@ const Input = () => {
             'guessInputPlaceholder'
           )}
           type="text"
-          onChange={(ev) => setGuessedWord(ev.target.value)}
-          value={guessedWord}
+          onChange={(ev) => setCurrentGuess(ev.target.value)}
+          value={currentGuess}
         ></input>
         <button
           data-test="submit-button"

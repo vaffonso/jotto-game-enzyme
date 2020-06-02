@@ -58,10 +58,11 @@ export default function App() {
       <successContext.SuccessProvider>
         <guessedWordsContext.GuessedWordsProvider>
           <h1>Jotto</h1>
+          <span>The secret word is {secretWord}</span>
 
           <Congrats success={success}></Congrats>
 
-          <Input />
+          <Input secretWord={secretWord} />
 
           <GuessedWords guessedWords={guessedWords}></GuessedWords>
         </guessedWordsContext.GuessedWordsProvider>

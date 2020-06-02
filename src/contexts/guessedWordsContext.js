@@ -1,5 +1,4 @@
 import React, { useContext, useState, useMemo } from 'react';
-import GuessedWords from '../GuessedWords';
 
 const guessedWordsContext = React.createContext();
 
