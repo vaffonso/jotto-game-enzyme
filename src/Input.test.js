@@ -73,7 +73,7 @@ describe('state controller input field', () => {
 
   it('should clear input field after submit click', () => {
     const submit = findByTestAttr(wrapper, 'submit-button');
-    submit.simulate('click', { preventDefault: () => { } });
+    submit.simulate('click', { preventDefault: () => {} });
 
     expect(setState).toHaveBeenCalledWith('');
   });
