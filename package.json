@@ -12,19 +12,24 @@
     "react-dom": "16.12.0",
     "react-scripts": "3.0.1"
   },
-  "devDependencies": {
-    "typescript": "3.8.3"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "prettier --check src/**/*.js",
+    "lint:fix": "prettier --write src/**.js"
   },
   "browserslist": [
     ">0.2%",
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "prettier": "2.0.5"
+  },
+  "prettier": {
+    "singleQuote": true
+  }
 }
