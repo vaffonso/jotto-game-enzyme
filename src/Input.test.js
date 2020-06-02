@@ -2,7 +2,9 @@ import * as React from 'react';
 import { findByTestAttr } from './testUtils';
 import Input from './Input';
 import { mount } from 'enzyme';
+
 import languageContext from './contexts/languageContext';
+import successContext from './contexts/successContext';
 
 /**
  * Create React wrapper for Input component testing
@@ -10,11 +12,14 @@ import languageContext from './contexts/languageContext';
  * @param {object} testValues = Context and props values for this specific test.
  * @returns {ReactWrapper} - Wrapper for Input component and providers
  */
-const setup = ({ secretWord, language }) => {
+const setup = ({ secretWord, language, success }) => {
   language = language || 'en';
+  success = success || false;
   return mount(
     <languageContext.Provider value={language}>
-      <Input secretWord={secretWord} />
+      <successContext.SuccessProvider value={[success, jest.fn()]}>
+        <Input secretWord={secretWord} />
+      </successContext.SuccessProvider>
     </languageContext.Provider>
   );
 };
@@ -81,5 +86,12 @@ describe('Language test', () => {
     const wrapper = setup({ language: 'emoji' });
     const submitButton = findByTestAttr(wrapper, 'submit-button');
     expect(submitButton.text()).toBe('🚀');
+  });
+});
+
+describe('input with success context', () => {
+  it('should not show when success is true', () => {
+    const wrapper = setup({ secretWord: 'party', success: true });
+    expect(wrapper.isEmptyRender()).toBe(true);
   });
 });

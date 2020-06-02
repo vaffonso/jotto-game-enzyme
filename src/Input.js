@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import languageContext from './contexts/languageContext';
+import successContext from './contexts/successContext';
 
 import stringModule from './helpers/strings';
 
@@ -7,12 +8,17 @@ const initialValue = '';
 
 const Input = () => {
   const [guessedWord, setGuessedWord] = useState(initialValue);
+  const [success, setSuccess] = successContext.useSuccess();
   const language = useContext(languageContext);
 
   const submitHandler = (ev) => {
     ev.preventDefault();
     setGuessedWord(initialValue);
   };
+
+  if (success) {
+    return null;
+  }
 
   return (
     <div data-test="component-input">
