@@ -4,13 +4,17 @@ import languageContext from './contexts/languageContext';
 import successContext from './contexts/successContext';
 import guessedWordsContext from './contexts/guessedWordsContext';
 
-import GuessedWords from './GuessedWords';
-import Congrats from './Congrats';
+import GuessedWords from './components/GuessedWords/GuessedWords';
+import Congrats from './components/Congrats/Congrats';
 
 import hookActions from './actions/hookActions';
-import Input from './Input';
-import Spinner from './Spinner';
-import LanguagePicker from './LanguagePicker';
+import Input from './components/Input/Input';
+import Spinner from './components/Spinner';
+import LanguagePicker from './components/LanguagePicker/LanguagePicker';
+
+import './App.scss';
+import Header from './components/Header';
+import { Jumbotron, Container } from 'react-bootstrap';
 
 /**
  * Reducer to update state, called automatically by dispatch
@@ -53,26 +57,29 @@ export default function App() {
   }, []);
 
   const form = (
-    <div className="container" data-test="component-app">
-      <LanguagePicker setLanguage={setLanguage} />
-      <successContext.SuccessProvider>
-        <guessedWordsContext.GuessedWordsProvider>
-          <h1>Jotto</h1>
-          <span>The secret word is {secretWord}</span>
 
-          <Congrats success={success}></Congrats>
+    <Jumbotron>
+      <Container data-test="component-app">
+        <LanguagePicker language={language} setLanguage={setLanguage} />
+        <successContext.SuccessProvider>
+          <guessedWordsContext.GuessedWordsProvider>
+            <h1>Jotto</h1>
+            <Congrats success={success}></Congrats>
 
-          <Input secretWord={secretWord} />
+            <Input secretWord={secretWord} />
 
-          <GuessedWords guessedWords={guessedWords}></GuessedWords>
-        </guessedWordsContext.GuessedWordsProvider>
-      </successContext.SuccessProvider>
-    </div>
+            <GuessedWords guessedWords={guessedWords}></GuessedWords>
+          </guessedWordsContext.GuessedWordsProvider>
+        </successContext.SuccessProvider>
+      </Container>
+    </Jumbotron>
   );
+
+  console.info(`The secret word is ${secretWord}`);
 
   return (
     <languageContext.Provider value={language}>
-      <span>Current lang {language}</span>
+      <Header />
       {secretWord ? form : <Spinner />}
     </languageContext.Provider>
   );

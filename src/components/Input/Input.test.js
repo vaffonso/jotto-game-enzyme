@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { findByTestAttr } from './testUtils';
+import { findByTestAttr } from '../../helpers/testUtils';
 import Input from './Input';
 import { mount } from 'enzyme';
 
-import languageContext from './contexts/languageContext';
-import successContext from './contexts/successContext';
-import guessedWordsContext from './contexts/guessedWordsContext';
+import languageContext from '../../contexts/languageContext';
+import successContext from '../../contexts/successContext';
+import guessedWordsContext from '../../contexts/guessedWordsContext';
 
 /**
  * Create React wrapper for Input component testing
@@ -36,12 +36,12 @@ describe('Input test', () => {
   });
 
   it('should render without error', () => {
-    const input = findByTestAttr(wrapper, 'component-input');
+    const input = findByTestAttr(wrapper, 'component-input', 'div');
     expect(input.length).toBe(1);
   });
 
   it('should render input component without error', () => {
-    const input = findByTestAttr(wrapper, 'input-box');
+    const input = findByTestAttr(wrapper, 'input-box', 'input');
     expect(input.length).toBe(1);
   });
 });
@@ -62,7 +62,7 @@ describe('state controller input field', () => {
   });
 
   it('state updates with value of input box upon change', () => {
-    const inputBox = findByTestAttr(wrapper, 'input-box');
+    const inputBox = findByTestAttr(wrapper, 'input-box', 'input');
     const mockEvent = { target: { value: 'train' } };
     inputBox.simulate('change', mockEvent);
 
@@ -71,24 +71,26 @@ describe('state controller input field', () => {
     expect(setState).toHaveBeenCalledWith('train');
   });
 
-  it('should clear input field after submit click', () => {
-    const submit = findByTestAttr(wrapper, 'submit-button');
-    submit.simulate('click', { preventDefault: () => {} });
+  it('should not be able to submit empty guess', () => {
+    const submit = findByTestAttr(wrapper, 'submit-button', 'button');
+    submit.simulate('click', { preventDefault: () => { } });
 
-    expect(setState).toHaveBeenCalledWith('');
-  });
+    expect(setState).toHaveBeenCalledTimes(0);
+    expect(submit.prop('disabled')).toBe(true);
+  })
+
 });
 
 describe('Language test', () => {
   it('should correctly render submit string in english', () => {
     const wrapper = setup({ language: 'en' });
-    const submitButton = findByTestAttr(wrapper, 'submit-button');
+    const submitButton = findByTestAttr(wrapper, 'submit-button', 'button');
     expect(submitButton.text()).toBe('Submit!');
   });
 
   it('should correctly render submit string in emoji', () => {
     const wrapper = setup({ language: 'emoji' });
-    const submitButton = findByTestAttr(wrapper, 'submit-button');
+    const submitButton = findByTestAttr(wrapper, 'submit-button', 'button');
     expect(submitButton.text()).toBe('🚀');
   });
 });

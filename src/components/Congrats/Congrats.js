@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 
-import stringsModule from './helpers/strings';
-import languageContext from './contexts/languageContext';
-import successContext from './contexts/successContext';
+import stringsModule from '../../helpers/strings';
+import languageContext from '../../contexts/languageContext';
+import successContext from '../../contexts/successContext';
 
 /**
  * Functional react component for congratulatory message

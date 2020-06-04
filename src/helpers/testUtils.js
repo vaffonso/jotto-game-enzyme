@@ -5,8 +5,8 @@ import checkPropTypes from 'check-prop-types';
  * @param {ShallowWrapper} wrapper  - Enzyme shallow wrapper.
  * @param {String} val - Value of data-test attribute search.
  */
-export const findByTestAttr = (wrapper, val) =>
-  wrapper.find(`[data-test="${val}"]`);
+export const findByTestAttr = (wrapper, val, element = '') =>
+  wrapper.find(`${element}[data-test="${val}"]`);
 
 /**
  *

@@ -1,17 +1,18 @@
 import React, { useContext } from 'react';
 
-import languageContext from './contexts/languageContext';
-import guessedWordsContext from './contexts/guessedWordsContext';
-import stringModule from './helpers/strings';
+import languageContext from '../../contexts/languageContext';
+import guessedWordsContext from '../../contexts/guessedWordsContext';
+import stringModule from '../../helpers/strings';
+import { Container, Table } from 'react-bootstrap';
 
 const GuessedWords = () => {
   const language = useContext(languageContext);
   const [guessedWords] = guessedWordsContext.useGuessedWords();
 
   const content = (
-    <div data-test="guessed-words">
+    <Container data-test="guessed-words">
       <h3>{stringModule.getStringByLanguage(language, 'guessedWords')}</h3>
-      <table className="table table-sm">
+      <Table striped bordered hover>
         <thead className="thead-ligth">
           <tr>
             <th>
@@ -33,8 +34,8 @@ const GuessedWords = () => {
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </Container>
   );
   const instruction = (
     <span data-test="guess-intruction">
@@ -42,9 +43,9 @@ const GuessedWords = () => {
     </span>
   );
   return (
-    <div data-test="component-guessed-words">
+    <Container data-test="component-guessed-words">
       {guessedWords.length ? content : instruction}
-    </div>
+    </Container>
   );
 };
 

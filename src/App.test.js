@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { findByTestAttr } from './testUtils';
+import { findByTestAttr } from './helpers/testUtils';
 import { mount } from 'enzyme';
 
 import App from './App';
@@ -43,7 +43,7 @@ describe('App test', () => {
   describe('getSecretWord calls', () => {
     it('should render App without errors', () => {
       const wrapper = setup();
-      const component = findByTestAttr(wrapper, 'component-app');
+      const component = findByTestAttr(wrapper, 'component-app', 'div');
       expect(component.length).toBe(1);
     });
 
@@ -66,7 +66,7 @@ describe('App test', () => {
     });
 
     it('should render app when secret word is not null', () => {
-      const appComponent = findByTestAttr(wrapper, 'component-app');
+      const appComponent = findByTestAttr(wrapper, 'component-app', 'div');
       expect(appComponent.exists()).toBe(true);
     });
 

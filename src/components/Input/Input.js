@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
-import languageContext from './contexts/languageContext';
-import successContext from './contexts/successContext';
-import guessedWordsContext from './contexts/guessedWordsContext';
+import languageContext from '../../contexts/languageContext';
+import successContext from '../../contexts/successContext';
+import guessedWordsContext from '../../contexts/guessedWordsContext';
 
-import stringModule from './helpers/strings';
-import { getLetterMatchCount } from './helpers/index';
+import stringModule from '../../helpers/strings';
+import { getLetterMatchCount } from '../../helpers/index';
+import { Container, Form, Button } from 'react-bootstrap';
 
 const initialValue = '';
 
@@ -36,11 +37,11 @@ const Input = ({ secretWord }) => {
   }
 
   return (
-    <div data-test="component-input">
-      <form className="form-inline">
-        <input
+    <Container data-test="component-input">
+      <Form inline className="mb-2">
+        <Form.Control
           data-test="input-box"
-          className="mb-2 mx-sm-3"
+          className="mr-2"
           placeholder={stringModule.getStringByLanguage(
             language,
             'guessInputPlaceholder'
@@ -48,16 +49,16 @@ const Input = ({ secretWord }) => {
           type="text"
           onChange={(ev) => setCurrentGuess(ev.target.value)}
           value={currentGuess}
-        ></input>
-        <button
+        />
+        <Button variant="primary" type="submit"
           data-test="submit-button"
-          className="btn btn-primary mb-2"
           onClick={submitHandler}
+          disabled={!currentGuess}
         >
           {stringModule.getStringByLanguage(language, 'submit')}
-        </button>
-      </form>
-    </div>
+        </Button>
+      </Form>
+    </Container>
   );
 };
 

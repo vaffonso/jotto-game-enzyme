@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
-import { findByTestAttr, checkProps } from './testUtils';
+import { findByTestAttr, checkProps } from '../../helpers/testUtils';
 import GuessedWords from './GuessedWords';
-import guessedWordsContext from './contexts/guessedWordsContext';
+import guessedWordsContext from '../../contexts/guessedWordsContext';
 
 const setup = (guessedWords = []) => {
   const useGuessedWordsMock = jest

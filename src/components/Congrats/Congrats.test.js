@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 
-import { findByTestAttr, checkProps } from './testUtils';
+import { findByTestAttr, checkProps } from '../../helpers/testUtils';
 import Congrats from './Congrats';
-import languageContext from './contexts/languageContext';
-import successContext from './contexts/successContext';
+import languageContext from '../../contexts/languageContext';
+import successContext from '../../contexts/successContext';
 
 /**
  * Factory of shallow wrapper for current test

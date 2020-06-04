@@ -1,11 +1,11 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import successContext from './contexts/successContext';
-import guessedWordsContext from './contexts/guessedWordsContext';
-import { findByTestAttr } from './testUtils';
-import Input from './Input';
-import GuessedWords from './GuessedWords';
+import successContext from '../contexts/successContext';
+import guessedWordsContext from '../contexts/guessedWordsContext';
+import { findByTestAttr } from '../helpers/testUtils';
+import Input from '../components/Input/Input';
+import GuessedWords from '../components/GuessedWords/GuessedWords';
 
 const setup = (guessedWords = [], secretWord = 'party') => {
   const wrapper = mount(
@@ -17,8 +17,8 @@ const setup = (guessedWords = [], secretWord = 'party') => {
     </successContext.SuccessProvider>
   );
 
-  const inputBox = findByTestAttr(wrapper, 'input-box');
-  const submitButton = findByTestAttr(wrapper, 'submit-button');
+  const inputBox = findByTestAttr(wrapper, 'input-box', 'input');
+  const submitButton = findByTestAttr(wrapper, 'submit-button', 'button');
 
   guessedWords.map((word) => {
     const mockEvent = { target: { value: word } };
