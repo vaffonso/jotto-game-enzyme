@@ -15,7 +15,7 @@ export const getSecretWord = (callback) => {
     const randomIndex = getRandomIndex();
     const randomWord = wordArchive[randomIndex];
 
-    setTimeout(callback(randomWord), 2000);
+    setTimeout(callback(randomWord), 5000);
 }
 
 export default {

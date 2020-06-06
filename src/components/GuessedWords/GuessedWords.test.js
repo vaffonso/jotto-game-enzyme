@@ -1,15 +1,18 @@
 import * as React from 'react';
-import { shallow, mount } from 'enzyme';
-import { findByTestAttr, checkProps } from '../../helpers/testUtils';
+import { mount } from 'enzyme';
+import { findByTestAttr } from '../../helpers/testUtils';
 import GuessedWords from './GuessedWords';
-import guessedWordsContext from '../../contexts/guessedWordsContext';
+import { JottoProvider } from '../../contexts/jottoContext';
+import { LanguageProvider } from '../../contexts/languageContext';
 
-const setup = (guessedWords = []) => {
-  const useGuessedWordsMock = jest
-    .fn()
-    .mockReturnValue([guessedWords, jest.fn()]);
-  guessedWordsContext.useGuessedWords = useGuessedWordsMock;
-  const wrapper = shallow(<GuessedWords />);
+const setup = (guessedWords = [], language = 'en') => {
+
+  const wrapper = mount(
+    <JottoProvider guessedWords={guessedWords}>
+      <LanguageProvider language={language}>
+        <GuessedWords />
+      </LanguageProvider>
+    </JottoProvider>);
   return wrapper;
 };
 
@@ -21,7 +24,7 @@ describe('If there are no words guessed', () => {
   });
 
   it('should render without errors', () => {
-    const container = findByTestAttr(wrapper, 'component-guessed-words');
+    const container = findByTestAttr(wrapper, 'component-guessed-words', 'Container');
     expect(container.length).toBe(1);
   });
 
@@ -44,7 +47,7 @@ describe('If there words guessed', () => {
   });
 
   it('should render guessed words section', () => {
-    const guessedDiv = findByTestAttr(wrapper, 'guessed-words');
+    const guessedDiv = findByTestAttr(wrapper, 'guessed-words', 'Container');
     expect(guessedDiv.length).toBe(1);
   });
 
@@ -52,6 +55,19 @@ describe('If there words guessed', () => {
     const guessedWordNodes = findByTestAttr(wrapper, 'guessed-word');
     expect(guessedWordNodes.length).toBe(guessedWords.length);
   });
+
+  it('should present guess identifier of each word', () => {
+    const guessIdentifier = findByTestAttr(wrapper, 'guess-id');
+    expect(guessIdentifier.length).toBe(3);
+    const firstGuessId = Number(guessIdentifier.first().text());
+    expect(isNaN(firstGuessId)).toBe(false);
+  });
+
+  it('should present the amount of words guessed', () => {
+    const guessedWordsTotalNode = findByTestAttr(wrapper, 'total-guesses');
+    expect(guessedWordsTotalNode.length).toBe(1);
+  });
+
 });
 
 describe('Language picker', () => {
@@ -62,13 +78,9 @@ describe('Language picker', () => {
   });
 
   it('should render guess instructions string in emoji', () => {
-    const useContextMock = jest.fn().mockReturnValue('emoji');
-    jest.spyOn(React, 'useContext').mockImplementation(useContextMock);
-
-    const wrapper = setup([]);
+    const wrapper = setup([], 'emoji');
     const instructions = findByTestAttr(wrapper, 'guess-intruction');
     expect(instructions.text()).toBe('🤔🔤');
-
-    jest.clearAllMocks();
   });
+
 });

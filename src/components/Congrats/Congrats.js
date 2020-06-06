@@ -1,8 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
+
+import Alert from 'react-bootstrap/Alert';
 
 import stringsModule from '../../helpers/strings';
-import languageContext from '../../contexts/languageContext';
-import successContext from '../../contexts/successContext';
+import { useJottoState, useJottoDispatch, actions } from '../../contexts/jottoContext';
+import { Button } from 'react-bootstrap';
+import { useLanguage } from '../../contexts/languageContext';
 
 /**
  * Functional react component for congratulatory message
@@ -11,21 +14,22 @@ import successContext from '../../contexts/successContext';
  * @returns {JSX.Element} - Rendered component(or null if `success` props is false)
  */
 const Congrats = () => {
-  const language = useContext(languageContext);
-  const [success] = successContext.useSuccess();
-  const classes = success ? 'alert alert-success' : '';
+  const [language] = useLanguage();
+  const { success } = useJottoState();
+  const dispatch = useJottoDispatch();
 
-  const content = success ? (
-    <span data-test="component-text">
-      {stringsModule.getStringByLanguage(language, 'congrats')}
-    </span>
-  ) : null;
+  const restart = ev => dispatch({ type: actions.RESET_GAME });
 
-  return (
-    <div data-test="component-congrats" className={classes}>
-      {content}
-    </div>
+  const successContent = (
+    <Alert data-test="component-congrats" variant={"success"}>
+      <p data-test="component-text">
+        {stringsModule.getStringByLanguage(language, 'congrats')}
+      </p>
+      <Button data-test="restart-button" onClick={restart}>{stringsModule.getStringByLanguage(language, 'newWord')}</Button>
+    </Alert>
   );
+
+  return success ? successContent : null;
 };
 
 export default Congrats;

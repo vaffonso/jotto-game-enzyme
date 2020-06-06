@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React, { } from 'react';
 
-import languageContext from '../../contexts/languageContext';
-import guessedWordsContext from '../../contexts/guessedWordsContext';
+import { useLanguage } from '../../contexts/languageContext';
+import { useJottoState } from '../../contexts/jottoContext';
 import stringModule from '../../helpers/strings';
 import { Container, Table } from 'react-bootstrap';
 
 const GuessedWords = () => {
-  const language = useContext(languageContext);
-  const [guessedWords] = guessedWordsContext.useGuessedWords();
+  const [language] = useLanguage();
+  const { guessedWords } = useJottoState();
 
   const content = (
     <Container data-test="guessed-words">
@@ -15,6 +15,7 @@ const GuessedWords = () => {
       <Table striped bordered hover>
         <thead className="thead-ligth">
           <tr>
+            <th>#</th>
             <th>
               {stringModule.getStringByLanguage(language, 'guessColumnHeader')}
             </th>
@@ -29,12 +30,14 @@ const GuessedWords = () => {
         <tbody>
           {guessedWords.map((t, i) => (
             <tr data-test="guessed-word" key={i}>
+              <td data-test="guess-id">{i + 1}</td>
               <td>{t.guessedWord}</td>
               <td>{t.letterMatchCount}</td>
             </tr>
           ))}
         </tbody>
       </Table>
+      <p data-test="total-guesses">{stringModule.getStringByLanguage(language, 'totalGuesses')}: <strong>{guessedWords.length}</strong></p>
     </Container>
   );
   const instruction = (

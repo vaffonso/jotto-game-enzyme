@@ -3,9 +3,9 @@ import { findByTestAttr } from '../../helpers/testUtils';
 import Input from './Input';
 import { mount } from 'enzyme';
 
-import languageContext from '../../contexts/languageContext';
-import successContext from '../../contexts/successContext';
-import guessedWordsContext from '../../contexts/guessedWordsContext';
+import { LanguageProvider, useLanguage } from '../../contexts/languageContext';
+import { JottoProvider } from '../../contexts/jottoContext';
+
 
 /**
  * Create React wrapper for Input component testing
@@ -17,14 +17,14 @@ const setup = ({ secretWord, language, success }) => {
   language = language || 'en';
   success = success || false;
   secretWord = secretWord || 'party';
+
+  const providerProps = { success, secretWord };
   return mount(
-    <languageContext.Provider value={language}>
-      <successContext.SuccessProvider value={[success, jest.fn()]}>
-        <guessedWordsContext.GuessedWordsProvider>
-          <Input secretWord={secretWord} />
-        </guessedWordsContext.GuessedWordsProvider>
-      </successContext.SuccessProvider>
-    </languageContext.Provider>
+    <LanguageProvider language={language}>
+      <JottoProvider {...providerProps}>
+        <Input secretWord={secretWord} />
+      </JottoProvider>
+    </LanguageProvider>
   );
 };
 

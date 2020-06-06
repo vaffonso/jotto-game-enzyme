@@ -1,8 +1,7 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
-import languageContext from './contexts/languageContext';
-import successContext from './contexts/successContext';
-import guessedWordsContext from './contexts/guessedWordsContext';
+import { useLanguage } from './contexts/languageContext';
+import { useJottoDispatch, actions, useJottoState } from './contexts/jottoContext';
 
 import GuessedWords from './components/GuessedWords/GuessedWords';
 import Congrats from './components/Congrats/Congrats';
@@ -16,71 +15,41 @@ import './App.scss';
 import Header from './components/Header';
 import { Jumbotron, Container } from 'react-bootstrap';
 
-/**
- * Reducer to update state, called automatically by dispatch
- * @param {object} state - existing state
- * @param {object} action - contains 'type' and 'payload' properties for the state update
- * @returns {object} - new state
- */
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'setSecretWord':
-      return { ...state, secretWord: action.payload };
-    case 'setLanguage':
-      return { ...state, language: action.payload };
-    default:
-      throw Error(`Invalid action type ${action.type}`);
-  }
-};
-
-const initialState = {
-  secretWord: null,
-  success: false,
-  guessedWords: [],
-  language: 'en',
-};
 
 export default function App() {
-  const [
-    { success, secretWord, guessedWords, language },
-    dispatch,
-  ] = useReducer(reducer, initialState);
+  const [language, setLanguage] = useLanguage();
+  const dispatch = useJottoDispatch();
+  const { secretWord } = useJottoState()
 
-  const setSecretWord = (secretWord) =>
-    dispatch({ type: 'setSecretWord', payload: secretWord });
-
-  const setLanguage = (lang) =>
-    dispatch({ type: 'setLanguage', payload: lang });
+  const setSecretWord = useCallback((word) => {
+    console.info(`The secret word is ${word}`);
+    dispatch({ type: actions.NEW_WORD, payload: word });
+  }, [dispatch])
 
   useEffect(() => {
-    hookActions.getSecretWord(setSecretWord);
-  }, []);
+    console.log(`executing effect`);
+
+    if (!secretWord) {
+      hookActions.getSecretWord(setSecretWord);
+    }
+  }, [setSecretWord, secretWord]);
 
   const form = (
-
-    <Jumbotron>
-      <Container data-test="component-app">
+    <Jumbotron data-test="component-app">
+      <Container>
         <LanguagePicker language={language} setLanguage={setLanguage} />
-        <successContext.SuccessProvider>
-          <guessedWordsContext.GuessedWordsProvider>
-            <h1>Jotto</h1>
-            <Congrats success={success}></Congrats>
-
-            <Input secretWord={secretWord} />
-
-            <GuessedWords guessedWords={guessedWords}></GuessedWords>
-          </guessedWordsContext.GuessedWordsProvider>
-        </successContext.SuccessProvider>
+        <h1>Jotto</h1>
+        <Congrats></Congrats>
+        <Input secretWord={secretWord} />
+        <GuessedWords></GuessedWords>
       </Container>
     </Jumbotron>
   );
 
-  console.info(`The secret word is ${secretWord}`);
-
   return (
-    <languageContext.Provider value={language}>
+    <React.Fragment>
       <Header />
       {secretWord ? form : <Spinner />}
-    </languageContext.Provider>
+    </React.Fragment>
   );
 }

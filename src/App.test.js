@@ -5,6 +5,8 @@ import { mount } from 'enzyme';
 import App from './App';
 
 import hookActions from './actions/hookActions';
+import { JottoProvider } from './contexts/jottoContext';
+import { LanguageProvider } from './contexts/languageContext';
 
 describe('App test', () => {
   const mockGetSecretWord = jest.fn();
@@ -32,12 +34,14 @@ describe('App test', () => {
    * @returns {ReactWrapper}
    */
   const setup = (state) => {
-    const mergedState = { ...defaultState, ...state };
-
-    jest
-      .spyOn(React, 'useReducer')
-      .mockImplementation(useReducerMock(mergedState));
-    return mount(<App />);
+    const mergedProps = { ...defaultState, ...state }
+    return mount(
+      <JottoProvider {...mergedProps}>
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
+      </JottoProvider>
+    );
   };
 
   describe('getSecretWord calls', () => {
@@ -48,7 +52,7 @@ describe('App test', () => {
     });
 
     it('getSecretWord gets called on App mount', () => {
-      setup();
+      setup({ secretWord: null });
 
       // Checks if secret word was updated
       expect(mockGetSecretWord).toHaveBeenCalled();
@@ -62,7 +66,7 @@ describe('App test', () => {
   describe('secret word is not null', () => {
     let wrapper;
     beforeEach(() => {
-      wrapper = setup('party');
+      wrapper = setup({ secretWord: 'party' });
     });
 
     it('should render app when secret word is not null', () => {

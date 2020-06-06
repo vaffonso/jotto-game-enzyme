@@ -1,20 +1,32 @@
 import React from 'react';
 import { mount } from 'enzyme';
 
-import successContext from '../contexts/successContext';
-import guessedWordsContext from '../contexts/guessedWordsContext';
 import { findByTestAttr } from '../helpers/testUtils';
 import Input from '../components/Input/Input';
 import GuessedWords from '../components/GuessedWords/GuessedWords';
+import { JottoProvider, useJottoState } from '../contexts/jottoContext';
+import { LanguageProvider } from '../contexts/languageContext';
+
 
 const setup = (guessedWords = [], secretWord = 'party') => {
+
+  const Content = () => {
+    const { secretWord } = useJottoState();
+    return (
+      <>
+        <Input secretWord={secretWord} /><GuessedWords />
+      </>
+    );
+  }
+
+  const providerProps = { secretWord };
+
   const wrapper = mount(
-    <successContext.SuccessProvider>
-      <guessedWordsContext.GuessedWordsProvider>
-        <Input secretWord={secretWord}></Input>
-        <GuessedWords></GuessedWords>
-      </guessedWordsContext.GuessedWordsProvider>
-    </successContext.SuccessProvider>
+    <JottoProvider  {...providerProps}>
+      <LanguageProvider>
+        <Content />
+      </LanguageProvider>
+    </JottoProvider>
   );
 
   const inputBox = findByTestAttr(wrapper, 'input-box', 'input');
@@ -66,11 +78,12 @@ describe('Test word guesses', () => {
       });
       it('guessed words table count should reflect guesses', () => {
         const guessedWordsTableRows = findByTestAttr(wrapper, 'guessed-word');
-        expect(guessedWordsTableRows.length).toBe(2);
+        expect(guessedWordsTableRows.length).toBe(1);
       });
     });
 
     describe('wrong guess', () => {
+
       beforeEach(() => {
         const mockEvent = { target: { value: 'train' } };
         inputBox.simulate('change', mockEvent);

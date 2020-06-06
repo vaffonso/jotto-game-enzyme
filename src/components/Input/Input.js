@@ -1,34 +1,22 @@
-import React, { useState, useContext } from 'react';
-import languageContext from '../../contexts/languageContext';
-import successContext from '../../contexts/successContext';
-import guessedWordsContext from '../../contexts/guessedWordsContext';
+import React, { useState } from 'react';
+import { useLanguage } from '../../contexts/languageContext';
+import { useJottoState, useJottoDispatch, actions } from '../../contexts/jottoContext';
+
 
 import stringModule from '../../helpers/strings';
-import { getLetterMatchCount } from '../../helpers/index';
 import { Container, Form, Button } from 'react-bootstrap';
 
 const initialValue = '';
 
 const Input = ({ secretWord }) => {
   const [currentGuess, setCurrentGuess] = useState(initialValue);
-  const [guessedWords, setGuessedWords] = guessedWordsContext.useGuessedWords();
-  const [success, setSuccess] = successContext.useSuccess();
-  const language = useContext(languageContext);
+  const { success } = useJottoState();
+  const [language] = useLanguage();
+  const dispatch = useJottoDispatch();
 
   const submitHandler = (ev) => {
     ev.preventDefault();
-
-    const letterMatchCount = getLetterMatchCount(currentGuess, secretWord);
-
-    const newGuessedWords = [
-      ...guessedWords,
-      { guessedWord: currentGuess, letterMatchCount: letterMatchCount },
-    ];
-
-    setGuessedWords(newGuessedWords);
-    if (secretWord && secretWord.toLowerCase() === currentGuess.toLowerCase()) {
-      setSuccess(true);
-    }
+    dispatch({ type: actions.NEW_GUESS, payload: currentGuess });
     setCurrentGuess(initialValue);
   };
 
