@@ -10,7 +10,7 @@ const initialValue = '';
 
 const Input = ({ secretWord }) => {
   const [currentGuess, setCurrentGuess] = useState(initialValue);
-  const { success } = useJottoState();
+  const { success, failure } = useJottoState();
   const [language] = useLanguage();
   const dispatch = useJottoDispatch();
 
@@ -20,7 +20,12 @@ const Input = ({ secretWord }) => {
     setCurrentGuess(initialValue);
   };
 
-  if (success) {
+  const giveUpHandler = (ev) => {
+    dispatch({ type: actions.GIVEUP_GAME });
+    setCurrentGuess(initialValue);
+  };
+
+  if (success || failure) {
     return null;
   }
 
@@ -44,6 +49,9 @@ const Input = ({ secretWord }) => {
           disabled={!currentGuess}
         >
           {stringModule.getStringByLanguage(language, 'submit')}
+        </Button>
+        <Button variant="secondary" data-test="giveup-button" className="ml-2" onClick={giveUpHandler}>
+          {stringModule.getStringByLanguage(language, 'giveUp')}
         </Button>
       </Form>
     </Container>

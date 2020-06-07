@@ -15,21 +15,43 @@ import { useLanguage } from '../../contexts/languageContext';
  */
 const Congrats = () => {
   const [language] = useLanguage();
-  const { success } = useJottoState();
+  const { success, failure, secretWord } = useJottoState();
   const dispatch = useJottoDispatch();
 
   const restart = ev => dispatch({ type: actions.RESET_GAME });
 
-  const successContent = (
-    <Alert data-test="component-congrats" variant={"success"}>
+  const showAlert = success || failure;
+
+  const giveUpAlert = (
+    <Alert data-test="component-alert" variant={'danger'}>
+      <div data-test="component-text">
+        <p>
+          {stringsModule.getStringByLanguage(language, 'reveal')} "{secretWord}"
+        </p>
+        <p>
+          {stringsModule.getStringByLanguage(language, 'goodLuck')}
+        </p>
+      </div>
+    </Alert>
+  )
+
+  const successAlert = (
+    <Alert data-test="component-congrats" variant={'success'}>
       <p data-test="component-text">
         {stringsModule.getStringByLanguage(language, 'congrats')}
       </p>
-      <Button data-test="restart-button" onClick={restart}>{stringsModule.getStringByLanguage(language, 'newWord')}</Button>
     </Alert>
+  )
+
+  const messageContent = (
+    <React.Fragment>
+      {failure ? giveUpAlert : successAlert}
+      <Button data-test="restart-button" onClick={restart}>{stringsModule.getStringByLanguage(language, 'newWord')}</Button>
+    </React.Fragment>
   );
 
-  return success ? successContent : null;
+
+  return showAlert ? messageContent : null;
 };
 
 export default Congrats;

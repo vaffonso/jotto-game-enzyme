@@ -7,12 +7,14 @@ import { getLetterMatchCount } from '../helpers/index';
 const actions = {
     NEW_WORD: 'NEW_WORD',
     NEW_GUESS: 'NEW_GUESS',
-    RESET_GAME: 'RESET_GAME'
+    RESET_GAME: 'RESET_GAME',
+    GIVEUP_GAME: 'GIVE_UP'
 };
 
 const initialState = {
     secretWord: null,
     success: false,
+    failure: false,
     guessedWords: []
 };
 
@@ -29,20 +31,27 @@ const JottoDispatchContext = React.createContext();
 function jottoReducer(state, { type, payload }) {
     switch (type) {
         case actions.NEW_WORD:
-            console.log(`executing NEW_WORD`);
+            // console.log(`executing NEW_WORD`);
             return {
                 ...state,
                 secretWord: payload,
             }
         case actions.RESET_GAME:
-            console.log(`executing RESET`);
+            // console.log(`executing RESET`);
             return { ...initialState };
+        case actions.GIVEUP_GAME:
+            // console.log('give up game');
+            return {
+                ...state,
+                failure: true,
+                success: false
+            }
         case actions.NEW_GUESS:
             if (!payload) {
                 return state;
             }
 
-            console.log(`executing NEW_GUESS with ${payload}`);
+            // console.log(`executing NEW_GUESS with ${payload}`);
 
             const newSuccess = payload.toLowerCase() === state.secretWord.toLowerCase();
             const letterMatchCount = getLetterMatchCount(payload, state.secretWord);

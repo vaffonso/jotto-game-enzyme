@@ -13,11 +13,13 @@ import { JottoProvider } from '../../contexts/jottoContext';
  * @param {Object} testValues - Context values specific for this setup
  * @returns {ReactWrapper}
  */
-const setup = ({ success, language }) => {
+const setup = ({ success, language, failure, secretWord }) => {
   language = language || 'en';
   success = success || false;
+  failure = failure || false;
+  secretWord = secretWord || 'party';
 
-  const providerProps = { success };
+  const providerProps = { success, failure, secretWord };
 
   return mount(
     <JottoProvider {...providerProps}>
@@ -40,9 +42,20 @@ describe('Language Picker', () => {
     const message = findByTestAttr(wrapper, 'component-text');
     expect(message.text()).toEqual('🎯🎉');
   });
+
+  it('should reveal secret word when given up', () => {
+    const secretWord = 'dream';
+    const wrapper = setup({ failure: true, secretWord: secretWord });
+    const message = findByTestAttr(wrapper, 'component-text');
+    expect(message.length).toBeGreaterThan(0);
+    const messageText = message.text();
+    expect(messageText.includes(secretWord)).toBe(true);
+  });
+
 });
 
 describe('Congrats tests', () => {
+
   it('renders without errror', () => {
     const wrapper = setup({});
     const component = findByTestAttr(wrapper, 'component-congrats', 'Alert');
@@ -77,4 +90,10 @@ describe('Congrats tests', () => {
     const component = findByTestAttr(wrapper, 'component-congrats', 'Alert');
     expect(component.length).toBe(0);
   });
+
+  it('should render restart button when given up', () => {
+    const wrapper = setup({ failure: true });
+    const btn = findByTestAttr(wrapper, 'restart-button', 'button');
+    expect(btn.length).toBe(1);
+  })
 });

@@ -9,7 +9,11 @@ const languageStrings = {
         guessedWords: 'Guesses',
         matchingLettersColumnHeader: 'Matching Letters',
         totalGuesses: 'Total Guesses',
-        newWord: 'New Word'
+        newWord: 'New Word',
+        giveUp: 'Give Up',
+        reveal: 'The secret word was ',
+        goodLuck: 'Better luck next time!',
+        enterYourSecret: 'Enter your own secret word'
     },
     emoji: {
         congrats: '🎯🎉',
@@ -20,7 +24,10 @@ const languageStrings = {
         guessedWords: '🤷‍♂️🔤',
         matchingLettersColumnHeader: '✅',
         totalGuesses: '∑🤔',
-        newWord: '✚ 1️⃣'
+        newWord: '⟳',
+        giveUp: '😩🤷‍♀️',
+        reveal: ' 👁‍🗨 🔤 👉',
+        goodLuck: '🍀 ⟳'
     }
 }
 
@@ -29,6 +36,11 @@ function getStringByLanguage(languageCode, stringKey, strings = languageStrings)
         console.warn(`Could not get ${stringKey} for ${languageCode} language.`);
         languageCode = defaultLang;
     }
+
+    if (!strings[languageCode][stringKey]) {
+        return stringKey;
+    }
+
     return strings[languageCode][stringKey];
 }
 

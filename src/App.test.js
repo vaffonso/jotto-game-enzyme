@@ -97,4 +97,21 @@ describe('App test', () => {
       expect(spinnerComponent.exists()).toBe(true);
     });
   });
+
+  describe('my secret word', () => {
+
+    it('should render enter your own secret word', () => {
+      const wrapper = setup({});
+      const enterYourSecretButton = findByTestAttr(wrapper, 'ownsecret-button', 'button');
+      expect(enterYourSecretButton.length).toBe(1);
+    });
+
+    it('should not render whenever any guess is already entered', () => {
+      const wrapper = setup({ secretWord: 'stead', guessedWords: ['bread'] });
+      const enterYourSecretButton = findByTestAttr(wrapper, 'ownsecret-button', 'button');
+      expect(enterYourSecretButton.length).toBe(0);
+    });
+
+  });
+
 });
